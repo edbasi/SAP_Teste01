@@ -44,7 +44,7 @@ app.get('/sap/business-partners', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
+  console.log(`✅ Servidor rodando em http://sandbox.api.sap.com:${PORT}`);
 });
 
 app.use(express.json()); // necessário para ler JSON no corpo da requisição

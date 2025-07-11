@@ -9,7 +9,7 @@ function App() {
 
   // Buscar lista de clientes
   const carregarClientes = () => {
-    fetch('http://localhost:3000/clientes')
+    fetch('https://sap-backend-in48.onrender.com//clientes')
       .then((res) => res.json())
       .then((data) => {
         setClientes(data);
@@ -29,7 +29,7 @@ function App() {
   const cadastrarCliente = (e) => {
     e.preventDefault();
 
-    fetch('http://localhost:3000/clientes', {
+    fetch('https://sap-backend-in48.onrender.com//clientes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome, email }),
@@ -51,7 +51,7 @@ function App() {
   // Atualizar cliente
   const atualizarCliente = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/clientes/${editando.id}`, {
+    fetch(`https://sap-backend-in48.onrender.com//clientes/${editando.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome, email }),
@@ -67,7 +67,7 @@ function App() {
 
   // Excluir cliente
   const excluirCliente = (id) => {
-    fetch(`http://localhost:3000/clientes/${id}`, {
+    fetch(`https://sap-backend-in48.onrender.com//clientes/${id}`, {
       method: 'DELETE',
     }).then(() => carregarClientes());
   };
