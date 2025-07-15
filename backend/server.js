@@ -18,15 +18,37 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Endpoint para listar clientes
 app.get('/clientes', async (req, res) => {
-  try {
-    const { data, error } = await supabase.from('clientes').select('*');
-    if (error) throw error;
-    res.json(data);
-  } catch (err) {
-    console.error('Erro real:', err);
-    res.status(500).json({ error: 'Erro ao buscar clientes' });
+  const { ativo, limite, offset, ordem } = req.query;
+
+  let query = supabase.from('clientes').select('*');
+
+  // 🔍 Filtro por "ativo"
+  if (ativo !== undefined) {
+    query = query.eq('ativo', ativo === 'true');
   }
+
+  // 🔢 Paginação
+  const lim = parseInt(limite) || 10;
+  const off = parseInt(offset) || 0;
+  query = query.range(off, off + lim - 1);
+
+  // 🧭 Ordenação (por padrão: nome ASC)
+  if (ordem) {
+    const [coluna, direcao] = ordem.split(':'); // Ex: "nome:desc"
+    if (coluna && direcao) {
+      query = query.order(coluna, { ascending: direcao.toLowerCase() !== 'desc' });
+    }
+  } else {
+    query = query.order('nome', { ascending: true });
+  }
+
+  // ✅ Executa consulta
+  const { data, error } = await query;
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data);
 });
+
 
 // Teste de conexão com API SAP
 app.get('/sap/business-partners', async (req, res) => {
