@@ -8,6 +8,8 @@ dotenv.config();
 const app = express();  // <--- declare o app antes de usar
 
 app.use(cors());        // <--- agora pode usar o cors
+app.use(express.json()); // necessário para ler JSON no corpo da requisição
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -76,8 +78,6 @@ app.get('/sap/business-partners', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Servidor rodando em http://sandbox.api.sap.com:${PORT}`);
 });
-
-app.use(express.json()); // necessário para ler JSON no corpo da requisição
 
 app.post('/clientes', async (req, res) => {
     const { nome, email } = req.body;
