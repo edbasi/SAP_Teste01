@@ -17,6 +17,7 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Endpoint para listar clientes
+
 app.get('/clientes', async (req, res) => {
   const { ativo, limite, offset, ordem, nome } = req.query;
 
