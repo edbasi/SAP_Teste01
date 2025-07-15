@@ -17,7 +17,6 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Endpoint para listar clientes
-
 app.get('/clientes', async (req, res) => {
   const { ativo, limite, offset, ordem, nome } = req.query;
 
@@ -55,13 +54,6 @@ app.get('/clientes', async (req, res) => {
     return res.status(500).json({ erro: 'Erro ao buscar clientes', detalhes: error.message });
   }
 
-  res.json(data);
-});
-
-  // ✅ Executa consulta
-  const { data, error } = await query;
-
-  if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 });
 
