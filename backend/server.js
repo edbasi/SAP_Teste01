@@ -18,13 +18,18 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Endpoint para listar clientes
 app.get('/clientes', async (req, res) => {
-  const { ativo, limite, offset, ordem } = req.query;
+  const { ativo, limite, offset, ordem, nome } = req.query;
 
   let query = supabase.from('clientes').select('*');
 
   // 🔍 Filtro por "ativo"
   if (ativo !== undefined) {
     query = query.eq('ativo', ativo === 'true');
+  }
+
+  // 🔍 Filtro por nome (parcial)
+  if (nome) {
+    query = query.ilike('nome', `%${nome}%`);
   }
 
   // 🔢 Paginação
@@ -41,6 +46,16 @@ app.get('/clientes', async (req, res) => {
   } else {
     query = query.order('nome', { ascending: true });
   }
+
+  // ✅ Execução da query
+  const { data, error } = await query;
+
+  if (error) {
+    return res.status(500).json({ erro: 'Erro ao buscar clientes', detalhes: error.message });
+  }
+
+  res.json(data);
+});
 
   // ✅ Executa consulta
   const { data, error } = await query;
