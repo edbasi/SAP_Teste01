@@ -58,8 +58,11 @@ app.post('/clientes', async (req, res) => {
 
     res.status(201).json(data[0]);
   } catch (err) {
-    console.error('Erro ao cadastrar cliente:', err);
-    res.status(500).json({ error: 'Erro ao cadastrar cliente.' });
+    console.error('Erro ao cadastrar cliente:', err.message || err);
+    if (err.response) {
+      console.error('Detalhes do erro:', err.response.data);
+    }
+    res.status(500).json({ error: 'Erro ao cadastrar cliente.', detalhes: err.message || err });
   }
 });
 
