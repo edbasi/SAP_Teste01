@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
   const { data, error } = await supabase
     .from('vw_pessoa_completa')
     .select('*')
-    .eq('descricao_tipo', 'Fornecedor');
+    .eq('tipo_descricao', 'Fornecedor');
 
   if (error) return res.status(500).json(error);
   res.json(data);
@@ -22,7 +22,7 @@ router.get('/:id', async (req, res) => {
     .from('vw_pessoa_completa')
     .select('*')
     .eq('id', id)
-    .eq('descricao_tipo', 'Fornecedor')
+    .eq('tipo_descricao', 'Fornecedor')
     .single();
 
   if (error) return res.status(404).json({ error: 'Fornecedor não encontrado' });
