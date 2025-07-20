@@ -1,4 +1,5 @@
 // routes/limpeza.js
+import express from 'express';
 const express = require('express');
 const router = express.Router();
 const { supabase } = require('../supabaseClient');
