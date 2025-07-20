@@ -1,9 +1,9 @@
-// routes/limpeza.js
 import express from 'express';
-const express = require('express');
-const router = express.Router();
-const { supabase } = require('../supabaseClient');
+import { supabase } from '../supabaseClient.js';
 
+const router = express.Router();
+
+// DELETE /limpeza/limpar-desativados
 router.delete('/limpar-desativados', async (req, res) => {
   try {
     const { data: desativadas, error } = await supabase
@@ -15,7 +15,7 @@ router.delete('/limpar-desativados', async (req, res) => {
 
     const idsParaExcluir = desativadas.map(p => p.id_pessoa);
 
-    if (idsParaExcluir.length) {
+    if (idsParaExcluir.length > 0) {
       const { error: erroDel } = await supabase
         .from('pessoa')
         .delete()
@@ -24,10 +24,13 @@ router.delete('/limpar-desativados', async (req, res) => {
       if (erroDel) return res.status(500).json({ erro: erroDel.message });
     }
 
-    res.json({ mensagem: 'Pessoas desativadas removidas com sucesso', total: idsParaExcluir.length });
+    res.json({
+      mensagem: 'Pessoas desativadas removidas com sucesso',
+      total: idsParaExcluir.length
+    });
   } catch (e) {
     res.status(500).json({ erro: 'Erro interno ao executar limpeza' });
   }
 });
 
-module.exports = router;
+export default router;

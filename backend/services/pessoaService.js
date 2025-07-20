@@ -1,5 +1,5 @@
 // services/pessoaService.js
-const supabase = require('../db');
+const { supabase } = require('../supabase');
 
 async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
   const { data: novaPessoa, error: erroPessoa } = await supabase

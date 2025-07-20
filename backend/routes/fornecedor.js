@@ -1,8 +1,8 @@
 import express from 'express';
-const express = require('express');
+import { supabase } from '../supabase.js';
+import { criarPessoaCompleta } from '../services/pessoaService.js';
+
 const router = express.Router();
-const supabase = require('../db');
-const { criarPessoaCompleta } = require('../services/pessoaService');
 
 // GET /fornecedores
 router.get('/', async (req, res) => {
@@ -63,4 +63,4 @@ router.delete('/:id', async (req, res) => {
   res.json({ message: 'Fornecedor excluído com sucesso' });
 });
 
-module.exports = router;
+export default router;
