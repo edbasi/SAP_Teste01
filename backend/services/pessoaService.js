@@ -1,7 +1,9 @@
 // services/pessoaService.js
-const { supabase } = require('../supabase');
+//const { supabase } = require('../supabase');
+import { supabase } from '../supabase.js'; // ⬅️ importante: adicione `.js`
 
-async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
+export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
+//  async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
   const { data: novaPessoa, error: erroPessoa } = await supabase
     .from('pessoa')
     .insert(pessoa)
@@ -34,6 +36,8 @@ async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
   return { data: novaPessoa };
 }
 
-module.exports = {
-  criarPessoaCompleta
-};
+// module.exports = {
+//   criarPessoaCompleta
+// };
+
+
