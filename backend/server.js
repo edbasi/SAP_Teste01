@@ -17,10 +17,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/clientes', clienteRoutes);
-// app.use('/fornecedores', fornecedorRoutes);
-// app.use('/operadores', operadorRoutes);
-// app.use('/bancos', bancoRoutes);
-// app.use('/limpezas', limpezaRoutes);
+app.use('/fornecedores', fornecedorRoutes);
+app.use('/operadores', operadorRoutes);
+app.use('/bancos', bancoRoutes);
+app.use('/limpezas', limpezaRoutes);
 
 app.get('/', (_, res) => res.send('API rodando...'));
 
