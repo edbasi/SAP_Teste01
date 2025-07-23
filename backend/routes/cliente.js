@@ -1,6 +1,6 @@
 // routes/cliente.js
 import express from 'express';
-//import { supabase } from '../supabase.js';
+import { supabase } from '../supabase.js';
 import { criarPessoaCompleta } from '../services/pessoaService.js';
 
 
@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
   const { data, error } = await supabase
     .from('vw_pessoa_completa')
     .select('*')
-    .eq('tipo_descricao', 'Cliente');
+    .eq('id_tipo', 5) // .eq('tipo_descricao', 'Cliente');
 
   if (error) return res.status(500).json(error);
   res.json(data);
@@ -24,7 +24,7 @@ router.get('/:id', async (req, res) => {
     .from('vw_pessoa_completa')
     .select('*')
     .eq('id', id)
-    .eq('tipo_descricao', 'Cliente')
+    .eq('id_tipo', 5) // .eq('tipo_descricao', 'Cliente')
     .single();
 
   if (error) return res.status(404).json({ error: 'Cliente não encontrado' });
