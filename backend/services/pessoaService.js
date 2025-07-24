@@ -37,9 +37,15 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
 
   //Grava Documento pesFisica
   if (pesFisica?.cpf) {
+
+    // const PessoaFis = {
+    //   nome: pessoa.nome,
+    //   id_tipo: tipo.id,
+    // };
+
     //console.log('[DEBUG] documentos retornado:', documentos);
     const { error: erroDoc } = await supabase.from('pessoa_fisica').insert({
-      ...pesFisica,
+      pesFisica,
       id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
     });
     if (erroDoc) return { error: erroDoc };
