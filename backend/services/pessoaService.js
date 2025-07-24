@@ -4,37 +4,22 @@ import { supabase } from '../supabase.js'; // ⬅️ importante: adicione `.js`
 
 export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
 
-  //console.log('[DEBUG] Iniciando criarPessoaCompleta');
-  //console.log('[DEBUG] pessoa:', pessoa);
-  //console.log('[DEBUG] documentos:', documentos);
-  //console.log('[DEBUG] enderecos:', enderecos);
-
   if (!pessoa?.nome) return { error: 'Nome da pessoa é obrigatório' };
-
-  // //Resgaa id do tipo
-  // const { data: tipo, error: erroTipo } = await supabase
-  //   .from('tipo')
-  //   .select('id')
-  //   .eq('descricao', pessoa.tipo_descricao)
-  //   .single();
-
-  //   //console.log('[DEBUG] tipo retornado:', tipo);
-  //   //console.log('[DEBUG] erroTipo:', erroTipo);
 
   //   if (erroTipo || !tipo) {
   //   return { error: erroTipo || 'Tipo não encontrado' };
   // }
 
-  // //Monta Pessoa Classe
-  // const novaPessoaData = {
-  //   nome: pessoa.nome,
-  //   id_tipo: 6 //tipo.id,
-  // };
+  //Monta Pessoa Classe
+  const DadPessoaData = {
+    nome: pessoa.nome,
+    id_tipo: pessoa.id_tipo //6 //tipo.id,
+  };
 
   //Insere Pessoa
   const { data: novaPessoa, error: erroPessoa } = await supabase
     .from('pessoa')
-    .insert(pessoa)
+    .insert(DadPessoaData)
     .select()
     .single();
 
