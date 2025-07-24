@@ -4,30 +4,31 @@ import { supabase } from '../supabase.js'; // ⬅️ importante: adicione `.js`
 
 export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
 
-  //Classe
-  const { data: tipo, error: erroTipo } = await supabase
-    .from('Tipo')
-    .select('id')
-    .eq('descricao', pessoa.tipo_descricao)
-    .single();
+  // Buscar id do tipo
+const { data: tipo, error: erroTipo } = await supabase
+.from('tipo') // <-- cuidado, nome da tabela deve ser 'tipo', com minúsculo
+.select('id')
+.eq('descricao', pessoa.tipo_descricao)
+.single();
 
-  if (erroTipo) return res.status(400).json({ erro: 'Tipo Cliente não encontrado' });
-  
-  // Substituir tipo_descricao por id_tipo no objeto a ser salvo
-const PessoaCls = {
-  nome: pessoa.nome,
-  id_tipo: tipo.id
+if (erroTipo || !tipo) {
+return { error: erroTipo || 'Tipo não encontrado' };
+}
+
+// Substituir tipo_descricao por id_tipo no objeto a ser salvo
+const novaPessoaData = {
+nome: pessoa.nome,
+id_tipo: tipo.id
 };
 
-  //Pessoa
-  const { data: novaPessoa, error: erroPessoa } = await supabase
-    .from('pessoa')
-    .insert(PessoaCls)
-    .select()
-    .single();
+// Inserir pessoa
+const { data: novaPessoa, error: erroPessoa } = await supabase
+.from('pessoa')
+.insert(novaPessoaData)
+.select()
+.single();
 
-  if (erroPessoa) return { error: erroPessoa };
-
+if (erroPessoa) return { error: erroPessoa };
   const idPessoa = novaPessoa.id;
 
   // Documento
