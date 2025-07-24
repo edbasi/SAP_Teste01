@@ -3,7 +3,17 @@
 import { supabase } from '../supabase.js'; // ⬅️ importante: adicione `.js`
 
 export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
-//  async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
+
+  //Classe
+  const { data: tipo, error: erroTipo } = await supabase
+    .from('Tipo')
+    .select('id')
+    .eq('descricao', pessoa.tipo_descricao)
+    .single();
+
+  if (erroTipo) return res.status(400).json({ erro: 'Tipo Cliente não encontrado' });
+  
+  //Pessoa
   const { data: novaPessoa, error: erroPessoa } = await supabase
     .from('pessoa')
     .insert(pessoa)
