@@ -13,14 +13,14 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
 
   if (erroTipo) return res.status(400).json({ erro: 'Tipo Cliente não encontrado' });
   
-  //Pessoa
-  const { data: novaPessoa, error: erroPessoa } = await supabase
-    .from('pessoa')
-    .insert(pessoa)
-    .select()
-    .single();
+  // //Pessoa
+  // const { data: novaPessoa, error: erroPessoa } = await supabase
+  //   .from('pessoa')
+  //   .insert(pessoa)
+  //   .select()
+  //   .single();
 
-  if (erroPessoa) return { error: erroPessoa };
+  // if (erroPessoa) return { error: erroPessoa };
 
   const idPessoa = novaPessoa.id;
 
