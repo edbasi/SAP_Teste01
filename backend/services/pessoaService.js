@@ -38,26 +38,49 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
   //Grava Documento pesFisica
   if (pesFisica?.cpf) {
 
-    // const PessoaFis = {
-    //   nome: pessoa.nome,
-    //   id_tipo: tipo.id,
-    // };
+    const PessoaFis = {
+      id_tipo: tipo.id,
+      cpf: pessoa.cpf,
+      numero_registro: pessoa.numero_registro,
+      orgao_expedidor: pessoa.orgao_expedidor,
+      data_expedicao: pessoa.data_expedicao
+};
 
     //console.log('[DEBUG] documentos retornado:', documentos);
-    const { error: erroDoc } = await supabase.from('pessoa_fisica').insert({
-      pesFisica,
-      id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
-    });
+    const { data: novaPessoa, error: erroPessoa } = await supabase
+    .from('pessoa_fisica')
+    .insert(pesFisica)
+    .select()
+    .single();
+
+    // const { error: erroDoc } = await supabase.from('pessoa_fisica').insert({
+    //   pesFisica,
+    //   id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
+    // });
     if (erroDoc) return { error: erroDoc };
   }
 
   //Grava Documento pesJuridica
   if (pesJuridica?.cnpj) {
+    const PessoaJur = {
+      id_tipo: tipo.id,
+      cnpj: pessoa.cnpj,
+      razao_social: pessoa.razao_social,
+      inscricao_estadual: pessoa.inscricao_estadual,
+      inscricao_municipal: pessoa.inscricao_municipal
+    };
+
     //console.log('[DEBUG] documentos retornado:', documentos);
-    const { error: erroDoc } = await supabase.from('pessoa_juridica').insert({
-      ...pesJuridica,
-      id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
-    });
+    const { data: novaPessoa, error: erroPessoa } = await supabase
+    .from('pessoa_juridica')
+    .insert(PessoaJur)
+    .select()
+    .single();
+// //console.log('[DEBUG] documentos retornado:', documentos);
+    // const { error: erroDoc } = await supabase.from('pessoa_juridica').insert({
+    //   ...pesJuridica,
+    //   id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
+    // });
     if (erroDoc) return { error: erroDoc };
   }
 
