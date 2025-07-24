@@ -2,7 +2,7 @@
 //const { supabase } = require('../supabase');
 import { supabase } from '../supabase.js'; // ⬅️ importante: adicione `.js`
 
-export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
+export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, enderecos }) {
 
   if (!pessoa?.nome) return { error: 'Nome da pessoa é obrigatório' };
 
@@ -35,12 +35,21 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
   //Resgata Id da Pessoa
   const idPessoa = novaPessoa.id;
 
-  //Grava Documento
-  if (documentos?.cpf || documentos?.cnpj) {
-    const docTable = documentos.cpf ? 'pessoa_fisica' : 'pessoa_juridica';
+  //Grava Documento pesFisica
+  if (pesFisica?.cpf) {
     //console.log('[DEBUG] documentos retornado:', documentos);
-    const { error: erroDoc } = await supabase.from(docTable).insert({
-      ...documentos,
+    const { error: erroDoc } = await supabase.from('pessoa_fisica').insert({
+      ...pesFisica,
+      id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
+    });
+    if (erroDoc) return { error: erroDoc };
+  }
+
+  //Grava Documento pesJuridica
+  if (pesJuridica?.cnpj) {
+    //console.log('[DEBUG] documentos retornado:', documentos);
+    const { error: erroDoc } = await supabase.from('pessoa_juridica').insert({
+      ...pesJuridica,
       id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
     });
     if (erroDoc) return { error: erroDoc };
