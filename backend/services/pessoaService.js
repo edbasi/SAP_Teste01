@@ -8,7 +8,7 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
 
   //Resgaa id do tipo
   const { data: tipo, error: erroTipo } = await supabase
-    .from('tipo')
+    .from('tipo_pessoa')
     .select('id')
     .eq('descricao', pessoa.tipo_descricao)
     .single();
