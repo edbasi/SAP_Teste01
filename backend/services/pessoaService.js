@@ -4,10 +4,10 @@ import { supabase } from '../supabase.js'; // ⬅️ importante: adicione `.js`
 
 export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
 
-  console.log('[DEBUG] Iniciando criarPessoaCompleta');
-  console.log('[DEBUG] pessoa:', pessoa);
-  console.log('[DEBUG] documentos:', documentos);
-  console.log('[DEBUG] enderecos:', enderecos);
+  //console.log('[DEBUG] Iniciando criarPessoaCompleta');
+  //console.log('[DEBUG] pessoa:', pessoa);
+  //console.log('[DEBUG] documentos:', documentos);
+  //console.log('[DEBUG] enderecos:', enderecos);
 
   if (!pessoa?.nome) return { error: 'Nome da pessoa é obrigatório' };
 
@@ -18,8 +18,8 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
     .eq('descricao', pessoa.tipo_descricao)
     .single();
 
-    console.log('[DEBUG] tipo retornado:', tipo);
-    console.log('[DEBUG] erroTipo:', erroTipo);
+    //console.log('[DEBUG] tipo retornado:', tipo);
+    //console.log('[DEBUG] erroTipo:', erroTipo);
 
     if (erroTipo || !tipo) {
     return { error: erroTipo || 'Tipo não encontrado' };
@@ -28,7 +28,7 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
   //Monta Pessoa Classe
   const novaPessoaData = {
     nome: pessoa.nome,
-    id_tipo: tipo.id,
+    id_tipo: 6 //tipo.id,
   };
 
   //Insere Pessoa
@@ -46,7 +46,7 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
   //Grava Documento
   if (documentos?.cpf || documentos?.cnpj) {
     const docTable = documentos.cpf ? 'pessoa_fisica' : 'pessoa_juridica';
-    console.log('[DEBUG] documentos retornado:', documentos);
+    //console.log('[DEBUG] documentos retornado:', documentos);
     const { error: erroDoc } = await supabase.from(docTable).insert({
       ...documentos,
       id: idPessoa, // ou id_pessoa: idPessoa dependendo do seu schema
