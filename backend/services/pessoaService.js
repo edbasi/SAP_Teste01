@@ -14,7 +14,7 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
   if (erroTipo) return res.status(400).json({ erro: 'Tipo Cliente não encontrado' });
   
   // Substituir tipo_descricao por id_tipo no objeto a ser salvo
-const novaPessoaData = {
+const PessoaCls = {
   nome: pessoa.nome,
   id_tipo: tipo.id
 };
@@ -22,7 +22,7 @@ const novaPessoaData = {
   //Pessoa
   const { data: novaPessoa, error: erroPessoa } = await supabase
     .from('pessoa')
-    .insert(pessoa)
+    .insert(PessoaCls)
     .select()
     .single();
 
