@@ -1,11 +1,9 @@
-// services/pessoaService.js
-//const { supabase } = require('../supabase');
-import { supabase } from '../supabase.js'; // ⬅️ importante: adicione `.js`
+import { supabase } from '../supabase.js'; // ⬅️ Certo com `.js`
 
 export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, enderecos }) {
   if (!pessoa?.nome) return { error: 'Nome da pessoa é obrigatório' };
 
-  // Buscar id do tipo
+  // Buscar id do tipo_pessoa
   const { data: tipo, error: erroTipo } = await supabase
     .from('tipo_pessoa')
     .select('id')
@@ -14,59 +12,57 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
 
   if (erroTipo || !tipo) return { error: erroTipo || 'Tipo não encontrado' };
 
-  const PessoaData = {
-    nome: pessoa.nome,
-    id_tipo: tipo.id,
-  };
-
+  // Inserir na tabela pessoa
   const { data: novaPessoa, error: erroPessoa } = await supabase
     .from('pessoa')
-    .insert(PessoaData)
+    .insert({
+      nome: pessoa.nome,
+      id_tipo: tipo.id
+    })
     .select()
     .single();
 
-  if (erroPessoa) return { error: erroPessoa };
+  if (erroPessoa || !novaPessoa) return { error: erroPessoa || 'Erro ao inserir pessoa' };
+
   const idPessoa = novaPessoa.id;
 
-  // Inserir pessoa_fisica
+  // Inserir na tabela pessoa_fisica, se aplicável
   if (pesFisica?.cpf) {
-    const PessoaFis = {
-      id: idPessoa,
-      id_tipo: tipo.id,
-      cpf: pesFisica.cpf,
-      numero_registro: pesFisica.numero_registro,
-      orgao_expedidor: pesFisica.orgao_expedidor,
-      data_expedicao: pesFisica.data_expedicao,
-    };
-
-    const { error: erroDocFis } = await supabase
+    const { error: erroFisica } = await supabase
       .from('pessoa_fisica')
-      .insert(PessoaFis);
+      .insert({
+        id: idPessoa, // FK obrigatória
+        cpf: pesFisica.cpf,
+        numero_registro: pesFisica.numero_registro ?? null,
+        orgao_expedidor: pesFisica.orgao_expedidor ?? null,
+        data_expedicao: pesFisica.data_expedicao ?? null
+      });
 
-    if (erroDocFis) return { error: erroDocFis };
+    if (erroFisica) return { error: erroFisica };
   }
 
-  // Inserir pessoa_juridica
+  // Inserir na tabela pessoa_juridica, se aplicável
   if (pesJuridica?.cnpj) {
-    const PessoaJur = {
-      id: idPessoa,
-      id_tipo: tipo.id,
-      cnpj: pesJuridica.cnpj,
-      razao_social: pesJuridica.razao_social,
-      inscricao_estadual: pesJuridica.inscricao_estadual,
-      inscricao_municipal: pesJuridica.inscricao_municipal,
-    };
-
-    const { error: erroDocJur } = await supabase
+    const { error: erroJuridica } = await supabase
       .from('pessoa_juridica')
-      .insert(PessoaJur);
+      .insert({
+        id: idPessoa, // FK obrigatória
+        cnpj: pesJuridica.cnpj,
+        razao_social: pesJuridica.razao_social ?? null,
+        inscricao_estadual: pesJuridica.inscricao_estadual ?? null,
+        inscricao_municipal: pesJuridica.inscricao_municipal ?? null
+      });
 
-    if (erroDocJur) return { error: erroDocJur };
+    if (erroJuridica) return { error: erroJuridica };
   }
 
-  // Inserir endereços
-  if (enderecos?.length > 0) {
-    const dadosEndereco = enderecos.map(e => ({ ...e, id_pessoa: idPessoa }));
+  // Inserir endereços, se houver
+  if (Array.isArray(enderecos) && enderecos.length > 0) {
+    const dadosEndereco = enderecos.map(e => ({
+      ...e,
+      id_pessoa: idPessoa
+    }));
+
     const { error: erroEndereco } = await supabase
       .from('pessoa_endereco')
       .insert(dadosEndereco);
@@ -74,5 +70,6 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
     if (erroEndereco) return { error: erroEndereco };
   }
 
+  // Tudo ok
   return { data: novaPessoa };
 }
