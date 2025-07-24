@@ -40,10 +40,10 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
 
     const PessoaFis = {
       id_tipo: tipo.id,
-      cpf: pessoa.cpf,
-      numero_registro: pessoa.numero_registro,
-      orgao_expedidor: pessoa.orgao_expedidor,
-      data_expedicao: pessoa.data_expedicao
+      cpf: pesFisica.cpf,
+      numero_registro: pesFisica.numero_registro,
+      orgao_expedidor: pesFisica.orgao_expedidor,
+      data_expedicao: pesFisica.data_expedicao
 };
 
     //console.log('[DEBUG] documentos retornado:', documentos);
@@ -64,10 +64,10 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
   if (pesJuridica?.cnpj) {
     const PessoaJur = {
       id_tipo: tipo.id,
-      cnpj: pessoa.cnpj,
-      razao_social: pessoa.razao_social,
-      inscricao_estadual: pessoa.inscricao_estadual,
-      inscricao_municipal: pessoa.inscricao_municipal
+      cnpj: pesJuridica.cnpj,
+      razao_social: pesJuridica.razao_social,
+      inscricao_estadual: pesJuridica.inscricao_estadual,
+      inscricao_municipal: pesJuridica.inscricao_municipal
     };
 
     //console.log('[DEBUG] documentos retornado:', documentos);
