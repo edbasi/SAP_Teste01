@@ -6,20 +6,27 @@ export async function criarPessoaCompleta({ pessoa, documentos, enderecos }) {
 
   if (!pessoa?.nome) return { error: 'Nome da pessoa é obrigatório' };
 
-  //   if (erroTipo || !tipo) {
-  //   return { error: erroTipo || 'Tipo não encontrado' };
-  // }
+  //Resgaa id do tipo
+  const { data: tipo, error: erroTipo } = await supabase
+    .from('tipo')
+    .select('id')
+    .eq('descricao', pessoa.tipo_descricao)
+    .single();
+
+  if (erroTipo || !tipo) {
+    return { error: erroTipo || 'Tipo não encontrado' };
+  }
 
   //Monta Pessoa Classe
-  const DadPessoaData = {
+  const PessoaData = {
     nome: pessoa.nome,
-    id_tipo: pessoa.id_tipo //6 //tipo.id,
+    id_tipo: tipo.id,
   };
 
   //Insere Pessoa
   const { data: novaPessoa, error: erroPessoa } = await supabase
     .from('pessoa')
-    .insert(DadPessoaData)
+    .insert(PessoaData)
     .select()
     .single();
 
