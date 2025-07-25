@@ -11,19 +11,19 @@ export async function criarPessoaCompleta({ pesEntrada, pesFisica, pesJuridica, 
 
     if (!pesEntrada?.tipo_descricao) return { error: 'Descrição do tipo é obrigatória' };
     
-    console.log('[DEBUG] Buscando tipo da pessoa...');
-    const { data: tipo, error: erroTipo } = await supabase
-      .from('tipo_pessoa')
-      .select('id')
-      .eq('descricao', pesEntrada.tipo)
-      .single();
+    // console.log('[DEBUG] Buscando tipo da pessoa...');
+    // const { data: tipo, error: erroTipo } = await supabase
+    //   .from('tipo_pessoa')
+    //   .select('id')
+    //   .eq('descricao', pesEntrada.tipo)
+    //   .single();
 
-    if (erroTipo || !tipo) {
-      console.log('[ERRO] Tipo:', erroTipo, tipo);
-      return { error: erroTipo || 'Tipo não encontrado' };
-    }
+    // if (erroTipo || !tipo) {
+    //   console.log('[ERRO] Tipo:', erroTipo, tipo);
+    //   return { error: erroTipo || 'Tipo não encontrado' };
+    // }
 
-    const idTipo = tipo.id;
+    const idTipo = 6;//tipo.id;
 
     // 1. Inserir pessoa
     console.log('[DEBUG] Inserindo pessoa...');
