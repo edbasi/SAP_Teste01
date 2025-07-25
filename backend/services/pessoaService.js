@@ -15,7 +15,7 @@ export async function criarPessoaCompleta({ pesEntrada, pesFisica, pesJuridica, 
     const { data: tipo, error: erroTipo } = await supabase
       .from('tipo_pessoa')
       .select('id')
-      .eq('descricao', pesEntrada.tipo_descricao)
+      .eq('descricao', pesEntrada.tipo)
       .single();
 
     if (erroTipo || !tipo) {
@@ -23,13 +23,15 @@ export async function criarPessoaCompleta({ pesEntrada, pesFisica, pesJuridica, 
       return { error: erroTipo || 'Tipo não encontrado' };
     }
 
+    const idTipo = tipo.id;
+
     // 1. Inserir pessoa
     console.log('[DEBUG] Inserindo pessoa...');
     const { data: novaPessoa, error: erroPessoa } = await supabase
       .from('pessoa')
       .insert({
         nome: pesEntrada.nome,
-        id_tipo: tipo.id
+        id_tipo: idTipo
       })
       .select()
       .single();
