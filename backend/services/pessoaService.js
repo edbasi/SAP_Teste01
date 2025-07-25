@@ -1,17 +1,34 @@
-export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, enderecos, tipo }) {
+export async function criarPessoaCompleta({ pesEntrada, pesFisica, pesJuridica, enderecos }) {
+//export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, enderecos, tipo }) {
   console.log('========== INÍCIO CRIAÇÃO DE PESSOA ==========');
 
   try {
     // 🔎 Log de entrada
-    console.log('[INPUT] Pessoa:', pessoa);
-    console.log('[INPUT] Tipo:', tipo);
+    console.log('[INPUT] Pessoa:', pesEntrada);
+    //console.log('[INPUT] Tipo:', tipo);
+
+    if (!pesEntrada?.nome) return { error: 'Nome da pessoa é obrigatório' };
+
+    if (!pesEntrada?.tipo_descricao) return { error: 'Descrição do tipo é obrigatória' };
+    
+    console.log('[DEBUG] Buscando tipo da pessoa...');
+    const { data: tipo, error: erroTipo } = await supabase
+      .from('tipo_pessoa')
+      .select('id')
+      .eq('descricao', pesEntrada.tipo_descricao)
+      .single();
+
+    if (erroTipo || !tipo) {
+      console.log('[ERRO] Tipo:', erroTipo, tipo);
+      return { error: erroTipo || 'Tipo não encontrado' };
+    }
 
     // 1. Inserir pessoa
     console.log('[DEBUG] Inserindo pessoa...');
     const { data: novaPessoa, error: erroPessoa } = await supabase
       .from('pessoa')
       .insert({
-        nome: pessoa.nome,
+        nome: pesEntrada.nome,
         id_tipo: tipo.id
       })
       .select()
