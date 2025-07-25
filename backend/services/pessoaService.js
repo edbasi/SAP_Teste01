@@ -4,17 +4,17 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
   return { error: 'Nome da pessoa é obrigatório' };
   try {
     // 🔎 Log de entrada
-    console.log('[INPUT] Pessoa:', pesEntrada);
+    console.log('[INPUT] Pessoa:', pessoa);
     //console.log('[INPUT] Tipo:', tipo);
-    if (!pesEntrada?.nome) return { error: 'Nome da pessoa é obrigatório' };
+    if (!pessoa?.nome) return { error: 'Nome da pessoa é obrigatório' };
 
-    if (!pesEntrada?.tipo_descricao) return { error: 'Descrição do tipo é obrigatória' };
+    if (!pessoa?.tipo_descricao) return { error: 'Descrição do tipo é obrigatória' };
     
     console.log('[DEBUG] Buscando tipo da pessoa...');
     const { data: tipo, error: erroTipo } = await supabase
       .from('tipo_pessoa')
       .select('id')
-      .eq('descricao', pesEntrada.tipo)
+      .eq('descricao', pessoa.tipo)
       .single();
 
     if (erroTipo || !tipo) {
@@ -29,7 +29,7 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
     const { data: novaPessoa, error: erroPessoa } = await supabase
       .from('pessoa')
       .insert({
-        nome: pesEntrada.nome,
+        nome: pessoa.nome,
         id_tipo: idTipo
       })
       .select()
