@@ -25,71 +25,71 @@ export async function criarPessoaCompleta({ pesEntrada, pesFisica, pesJuridica, 
 
     const idTipo = 6;//tipo.id;
 
-    // 1. Inserir pessoa
-    console.log('[DEBUG] Inserindo pessoa...');
-    const { data: novaPessoa, error: erroPessoa } = await supabase
-      .from('pessoa')
-      .insert({
-        nome: pesEntrada.nome,
-        id_tipo: idTipo
-      })
-      .select()
-      .single();
+    // // 1. Inserir pessoa
+    // console.log('[DEBUG] Inserindo pessoa...');
+    // const { data: novaPessoa, error: erroPessoa } = await supabase
+    //   .from('pessoa')
+    //   .insert({
+    //     nome: pesEntrada.nome,
+    //     id_tipo: idTipo
+    //   })
+    //   .select()
+    //   .single();
 
     if (erroPessoa) throw { origem: 'pessoa', mensagem: 'Erro ao inserir pessoa', detalhes: erroPessoa };
 
     const idPessoa = novaPessoa.id;
     console.log('[OK] Pessoa inserida:', idPessoa);
 
-    // 2. Inserir pessoa_fisica
-    if (pesFisica) {
-      console.log('[DEBUG] Inserindo pessoa_fisica...');
-      const { error: erroFisica } = await supabase
-        .from('pessoa_fisica')
-        .insert({
-          id: idPessoa,
-          cpf: pesFisica.cpf,
-          numero_registro: pesFisica.numero_registro ?? null,
-          orgao_expedidor: pesFisica.orgao_expedidor ?? null,
-          data_expedicao: pesFisica.data_expedicao ?? null
-        });
+    // // 2. Inserir pessoa_fisica
+    // if (pesFisica) {
+    //   console.log('[DEBUG] Inserindo pessoa_fisica...');
+    //   const { error: erroFisica } = await supabase
+    //     .from('pessoa_fisica')
+    //     .insert({
+    //       id: idPessoa,
+    //       cpf: pesFisica.cpf,
+    //       numero_registro: pesFisica.numero_registro ?? null,
+    //       orgao_expedidor: pesFisica.orgao_expedidor ?? null,
+    //       data_expedicao: pesFisica.data_expedicao ?? null
+    //     });
+// 
+    //   if (erroFisica) throw { origem: 'pessoa_fisica', mensagem: 'Erro ao inserir pessoa_fisica', detalhes: erroFisica };
+    //   console.log('[OK] Pessoa física inserida.');
+    // }
 
-      if (erroFisica) throw { origem: 'pessoa_fisica', mensagem: 'Erro ao inserir pessoa_fisica', detalhes: erroFisica };
-      console.log('[OK] Pessoa física inserida.');
-    }
+    // // // 3. Inserir pessoa_juridica
+    // if (pesJuridica) {
+    //   console.log('[DEBUG] Inserindo pessoa_juridica...');
+    //   const { error: erroJuridica } = await supabase
+    //     .from('pessoa_juridica')
+    //     .insert({
+    //       id: idPessoa,
+    //       cnpj: pesJuridica.cnpj,
+    //       razao_social: pesJuridica.razao_social ?? null,
+    //       inscricao_estadual: pesJuridica.inscricao_estadual ?? null,
+    //       inscricao_municipal: pesJuridica.inscricao_municipal ?? null
+    //     });
 
-    // 3. Inserir pessoa_juridica
-    if (pesJuridica) {
-      console.log('[DEBUG] Inserindo pessoa_juridica...');
-      const { error: erroJuridica } = await supabase
-        .from('pessoa_juridica')
-        .insert({
-          id: idPessoa,
-          cnpj: pesJuridica.cnpj,
-          razao_social: pesJuridica.razao_social ?? null,
-          inscricao_estadual: pesJuridica.inscricao_estadual ?? null,
-          inscricao_municipal: pesJuridica.inscricao_municipal ?? null
-        });
+    //   if (erroJuridica) throw { origem: 'pessoa_juridica', mensagem: 'Erro ao inserir pessoa_juridica', detalhes: erroJuridica };
+    //   console.log('[OK] Pessoa jurídica inserida.');
+    // }
 
-      if (erroJuridica) throw { origem: 'pessoa_juridica', mensagem: 'Erro ao inserir pessoa_juridica', detalhes: erroJuridica };
-      console.log('[OK] Pessoa jurídica inserida.');
-    }
+    // // // 4. Inserir endereços
+    // if (enderecos?.length > 0) {
+    //   console.log('[DEBUG] Inserindo endereços...');
+    //   const dadosEndereco = enderecos.map(e => ({
+    //     ...e,
+    //     id_pessoa: idPessoa
+    //   }));
 
-    // 4. Inserir endereços
-    if (enderecos?.length > 0) {
-      console.log('[DEBUG] Inserindo endereços...');
-      const dadosEndereco = enderecos.map(e => ({
-        ...e,
-        id_pessoa: idPessoa
-      }));
+    //   const { error: erroEndereco } = await supabase
+    //     .from('pessoa_endereco')
+    //     .insert(dadosEndereco);
 
-      const { error: erroEndereco } = await supabase
-        .from('pessoa_endereco')
-        .insert(dadosEndereco);
-
-      if (erroEndereco) throw { origem: 'pessoa_endereco', mensagem: 'Erro ao inserir endereços', detalhes: erroEndereco };
-      console.log('[OK] Endereços inseridos.');
-    }
+    //   if (erroEndereco) throw { origem: 'pessoa_endereco', mensagem: 'Erro ao inserir endereços', detalhes: erroEndereco };
+    //   console.log('[OK] Endereços inseridos.');
+    // }
 
     console.log('========== FIM CRIAÇÃO DE PESSOA ==========');
     return { idPessoa, success: true };
