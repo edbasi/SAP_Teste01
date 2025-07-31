@@ -9,7 +9,7 @@ const router = express.Router();
 // GET /Clientes
 router.get('/', async (req, res) => {
   const { data, error } = await supabase
-    .from('vw_pessoa_completa')
+    .from('VwPessoa')
     .select('*')
     .eq('tipo_descricao', 'Cliente');
 
@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
-    .from('vw_pessoa_completa')
+    .from('VwPessoa')
     .select('*')
     .eq('id', id)
     .eq('tipo_descricao', 'Cliente')
