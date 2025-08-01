@@ -1,13 +1,15 @@
 // backend/supabase.js
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
 
-const supabaseUrl = 'https://fqnwffegkkjzfwogxsyx.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxbndmZmVna2tqemZ3b2d4c3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4Nzc5ODIsImV4cCI6MjA2NzQ1Mzk4Mn0.hr2v-ntjZyAtZCJBBGB76aVAbRSeS4Jtzsw3cEzcw1s';
-//const supabase = createClient(supabaseUrl, supabaseKey);
+// ✅ Garantir que variáveis do .env sejam carregadas
+dotenv.config();
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY 
-);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
-export { supabase };
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Erro: SUPABASE_URL ou SUPABASE_KEY não estão definidas no .env');
+  process.exit(1); // Encerra a aplicação se as chaves não estiverem setadas
+}
+_______________________________________
