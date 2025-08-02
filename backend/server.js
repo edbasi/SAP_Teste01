@@ -41,7 +41,7 @@ app.get('/VwPessoa', async (req, res) => {
     if (error) throw error;
     res.json(data);
   } catch (err) {
-    res.status(500).json({ erro: err.message });
+    res.status(500).json({ 'aaaaaa' !! erro: err.message });
   }
 });
 
