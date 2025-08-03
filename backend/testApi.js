@@ -1,27 +1,42 @@
-const fetch = require('node-fetch');
+// ✅ Importa bibliotecas necessárias
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
 
-const API_URL = 'https://sap-backend-in48.onrender.com/pessoas';
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTQxOTA4MjgsImV4cCI6MTc1NDE5NDQyOH0.5su5FCjCYolvwTAUe9Ge6udtzAss3B9RCDlHta7l87Q'; // substitua pelo seu token JWT gerado
+// ✅ Carrega variáveis do arquivo .env
+dotenv.config();
 
-async function testarPessoas() {
+const API_URL = "https://sap-backend-in48.onrender.com/pessoas";
+const TOKEN = process.env.JWT_TOKEN; // 👉 Lê o token do .env
+
+async function testarAPI() {
   try {
-    const res = await fetch(API_URL, {
+    console.log("🔄 Testando API:", API_URL);
+    console.log("🔑 Usando token:", TOKEN ? "✅ Encontrado" : "❌ Não encontrado");
+
+    const response = await fetch(API_URL, {
       headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json'
+        "Authorization": `Bearer ${TOKEN}`
       }
     });
 
-    if (!res.ok) {
-      console.error('Erro na requisição:', res.status, res.statusText);
+    if (!response.ok) {
+      console.error(`❌ Erro HTTP ${response.status}: ${response.statusText}`);
+      const erro = await response.text();
+      console.error("Detalhes:", erro);
       return;
     }
 
-    const data = await res.json();
-    console.log('Resposta da API /pessoas:', data);
+    const data = await response.json();
+
+    console.log("✅ Dados recebidos da API:");
+    console.table(data); // 👉 Exibe em tabela no console
+
   } catch (err) {
-    console.error('Erro:', err.message);
+    console.error("❌ Erro na requisição:", err.message);
   }
 }
 
-testarPessoas();
+// ✅ Executa o teste
+testarAPI();
+
+
