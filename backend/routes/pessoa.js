@@ -5,7 +5,7 @@ import { autenticar } from '../auth.js';
 const router = express.Router();
 
 router.get('/', autenticar, async (req, res) => {
-  const { data, error } = await supabase.from('vwpessoa').select('*');
+  const { data, error } = await supabase.from('vw_pessoa').select('*');
   if (error) return res.status(500).json({ erro: error.message });
   res.json(data);
 });
@@ -13,7 +13,7 @@ router.get('/', autenticar, async (req, res) => {
 router.get('/:id', autenticar, async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
-    .from('vwpessoa')
+    .from('vw_pessoa')
     .select('*')
     .eq('id', id)
     .single();
