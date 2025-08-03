@@ -35,7 +35,7 @@ app.use('/pessoas', pessoaRoutes);
 app.get('/VwPessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from('vwpessoa')
+      .from('vw_pessoa')
       .select('*');
 
     if (error) throw error;
