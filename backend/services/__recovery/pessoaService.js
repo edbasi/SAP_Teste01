@@ -1,4 +1,4 @@
-﻿import { supabase } from './supabaseClient'; // ou o caminho correto para seu supabase
+import { supabase } from './supabaseClient'; // ou o caminho correto para seu supabase
 import { log, error } from './logger.js';
 
 export async function criarPessoaCompleta({ r_pessoa, a_contatos, a_enderecos }) {

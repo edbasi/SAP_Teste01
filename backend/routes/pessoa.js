@@ -18,7 +18,7 @@ router.get('/', autenticar, async (req, res) => {
 router.get('/:id', autenticar, async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
-    .from('vw_pessoa')
+    .from('vwPessoa')
     .select('*')
     .eq('id', id)
     .single();
