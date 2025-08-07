@@ -19,6 +19,8 @@ if (!JWT_SECRET) {
 
 // ✅ Define tempo de expiração (default: 1h ou argumento passado ex: node gerarToken.js 30m)
 const expiresIn = process.argv[2] || '1h';
+// === ARGUMENTOS DE EXECUÇÃO ===
+const modo = process.argv[3]; // se for 'retorno', apenas exibe o token
 
 // ✅ Payload básico
 const payload = {
@@ -28,6 +30,11 @@ const payload = {
 
 // ✅ Gera o token
 const token = jwt.sign(payload, JWT_SECRET, { expiresIn });
+
+if (modo === 'retorno') {
+  console.log(token);
+  process.exit(0);
+}
 
 // ✅ Atualiza ou adiciona JWT_TOKEN no .env
 let envContent = '';

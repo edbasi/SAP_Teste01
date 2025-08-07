@@ -1,0 +1,9 @@
+POST http://localhost:3001/pessoas
+Content-Type: application/json
+Authorization: Bearer SEU_TOKEN_JWT_AQUI
+
+{
+  "nome": "Teste da API",
+  "tipo_pessoa": "F",
+  "cpf": "123.456.789-00"
+}

@@ -1,102 +1,138 @@
-export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, enderecos }) {
-  console.log('========== INÍCIO CRIAÇÃO DE PESSOA ==========');
+﻿import { supabase } from './supabaseClient'; // ou o caminho correto para seu supabase
+import { log, error } from './logger.js';
 
-  return { error: 'Nome da pessoa é obrigatório' };
+export async function criarPessoaCompleta({ r_pessoa, a_contatos, a_enderecos }) {
+  log('==========sddfsdfsdsd INÍCIO CRIAÇÃO DE PESSOA  dsfsdfsdsd ==========');
+
+  if (!r_pessoa) return { error: 'Dados Inválidos' };
+
   try {
-    // 🔎 Log de entrada
-    console.log('[INPUT] Pessoa:', pessoa);
-    //console.log('[INPUT] Tipo:', tipo);
-    if (!pessoa?.nome) return { error: 'Nome da pessoa é obrigatório' };
+    log('[INPUT] Pessoa:', r_pessoa);
 
-    if (!pessoa?.tipo_descricao) return { error: 'Descrição do tipo é obrigatória' };
-    
-    console.log('[DEBUG] Buscando tipo da pessoa...');
-    const { data: tipo, error: erroTipo } = await supabase
-      .from('tipo_pessoa')
-      .select('id')
-      .eq('descricao', pessoa.tipo)
+    if (!r_pessoa.s_Nome) return { error: 'Nome da pessoa é obrigatório' };
+    if (!r_pessoa.s_Classe) return { error: 'Descrição do tipo é obrigatória' };
+
+    log('[DEBUG] Buscando tipo da Pessoa...');
+
+    const { data: r_tipo, error: erroTipo } = await supabase
+      .from('TabPesClasse')
+      .select('id, TipClasse')
+      .eq('DesClasse', r_pessoa.s_Classe)
       .single();
 
-    if (erroTipo || !tipo) {
-      console.log('[ERRO] Tipo:', erroTipo, tipo);
-      return { error: erroTipo || 'Tipo não encontrado' };
+    if (erroTipo || !r_tipo) {
+      error('[ERRO] Tipo:', erroTipo, r_tipo);
+      return { error: erroTipo?.message || 'Tipo não encontrado' };
     }
 
-    const idTipo = tipo.id;
+    const i_Tipo = r_tipo.id;
+    const s_Tipo = r_tipo.TipClasse;
 
-    // 1. Inserir pessoa
-    console.log('[DEBUG] Inserindo pessoa...');
-    const { data: novaPessoa, error: erroPessoa } = await supabase
-      .from('pessoa')
-      .insert({
-        nome: pessoa.nome,
-        id_tipo: idTipo
-      })
+    log('[DEBUG] Inserindo Pessoa...');
+
+    const { data: r_sucesso, error: r_erro } = await supabase
+      .from('CadPessoa')
+      .upsert({
+        id: r_pessoa.i_Pessoa,
+        NomPessoa: r_pessoa.s_Nome,
+        idClassePessoa: i_Tipo,
+        TipClasse: s_Tipo
+      }, { onConflict: 'id' })
       .select()
       .single();
 
-    if (erroPessoa) throw { origem: 'pessoa', mensagem: 'Erro ao inserir pessoa', detalhes: erroPessoa };
-
-    const idPessoa = novaPessoa.id;
-    console.log('[OK] Pessoa inserida:', idPessoa);
-
-    // 2. Inserir pessoa_fisica
-    if (pesFisica) {
-      console.log('[DEBUG] Inserindo pessoa_fisica...');
-      const { error: erroFisica } = await supabase
-        .from('pessoa_fisica')
-        .insert({
-          id: idPessoa,
-          cpf: pesFisica.cpf,
-          numero_registro: pesFisica.numero_registro ?? null,
-          orgao_expedidor: pesFisica.orgao_expedidor ?? null,
-          data_expedicao: pesFisica.data_expedicao ?? null
-        });
-
-      if (erroFisica) throw { origem: 'pessoa_fisica', mensagem: 'Erro ao inserir pessoa_fisica', detalhes: erroFisica };
-      console.log('[OK] Pessoa física inserida.');
+    if (r_erro) {
+      throw {
+        origem: 'pessoa',
+        mensagem: 'Erro ao inserir pessoa',
+        detalhes: r_erro
+      };
     }
 
-    // // 3. Inserir pessoa_juridica
-    if (pesJuridica) {
-      console.log('[DEBUG] Inserindo pessoa_juridica...');
-      const { error: erroJuridica } = await supabase
-        .from('pessoa_juridica')
-        .insert({
-          id: idPessoa,
-          cnpj: pesJuridica.cnpj,
-          razao_social: pesJuridica.razao_social ?? null,
-          inscricao_estadual: pesJuridica.inscricao_estadual ?? null,
-          inscricao_municipal: pesJuridica.inscricao_municipal ?? null
-        });
+    const i_Pessoa = r_sucesso.id;
+    log('[OK] Pessoa inserida:', r_sucesso);
 
-      if (erroJuridica) throw { origem: 'pessoa_juridica', mensagem: 'Erro ao inserir pessoa_juridica', detalhes: erroJuridica };
-      console.log('[OK] Pessoa jurídica inserida.');
+    if (r_pessoa.s_CpfPessoa) {
+      log('[DEBUG] Inserindo Pessoa Física...');
+
+      const { error: erroCPF } = await supabase
+        .from('CadCpfPessoa')
+        .upsert({
+          idPessoa: i_Pessoa,
+          CpfPessoa: r_pessoa.s_CpfPessoa,
+          NumRegistro: r_pessoa.s_NumRegistro ?? null,
+          OrgExpedidor: r_pessoa.s_OrgRegistro ?? null,
+          DatExpedicao: r_pessoa.d_ExpRegistro ?? null
+        }, { onConflict: 'idPessoa' })
+        .select()
+        .single();
+
+      if (erroCPF) {
+        throw {
+          origem: 'Pessoa Física',
+          mensagem: 'Erro ao inserir/atualizar Pessoa Física',
+          detalhes: erroCPF
+        };
+      }
+
+      log('[OK] Pessoa Física inserida ou atualizada.');
+
+      const { error: erroDelCNPJ } = await supabase
+        .from('CadCgcPessoa')
+        .delete()
+        .eq('idPessoa', i_Pessoa);
+
+      if (erroDelCNPJ) {
+        error('[AVISO] Não foi possível remover CNPJ vinculado:', erroDelCNPJ);
+      } else {
+        log('[OK] CNPJ vinculado removido com sucesso (se existia).');
+      }
     }
 
-    // // 4. Inserir endereços
-    if (enderecos?.length > 0) {
-      console.log('[DEBUG] Inserindo endereços...');
-      const dadosEndereco = enderecos.map(e => ({
-        ...e,
-        id_pessoa: idPessoa
-      }));
+    if (r_pessoa.s_CgcPessoa) {
+      log('[DEBUG] Inserindo Pessoa Jurídica...');
 
-      const { error: erroEndereco } = await supabase
-        .from('pessoa_endereco')
-        .insert(dadosEndereco);
+      const { error: erroCNPJ } = await supabase
+        .from('CadCgcPessoa')
+        .upsert({
+          idPessoa: i_Pessoa,
+          CgcPessoa: r_pessoa.s_CgcPessoa,
+          InscEstadual: r_pessoa.s_InscEstadual ?? null,
+          InscMunicipal: r_pessoa.s_InscMunicipal ?? null,
+          RazSocial: r_pessoa.s_RazSocial ?? r_pessoa.s_Nome
+        }, { onConflict: 'idPessoa' })
+        .select()
+        .single();
 
-      if (erroEndereco) throw { origem: 'pessoa_endereco', mensagem: 'Erro ao inserir endereços', detalhes: erroEndereco };
-      console.log('[OK] Endereços inseridos.');
+      if (erroCNPJ) {
+        throw {
+          origem: 'Pessoa Jurídica',
+          mensagem: 'Erro ao inserir/atualizar Pessoa Jurídica',
+          detalhes: erroCNPJ
+        };
+      }
+
+      log('[OK] Pessoa Jurídica inserida ou atualizada.');
+
+      const { error: erroDelCPF } = await supabase
+        .from('CadCpfPessoa')
+        .delete()
+        .eq('idPessoa', i_Pessoa);
+
+      if (erroDelCPF) {
+        error('[AVISO] Não foi possível remover CPF vinculado:', erroDelCPF);
+      } else {
+        log('[OK] CPF vinculado removido com sucesso (se existia).');
+      }
     }
 
-    console.log('========== FIM CRIAÇÃO DE PESSOA ==========');
-    return { idPessoa, success: true };
+    log('========== FIM CRIAÇÃO DE PESSOA ==========');
+    return { idPessoa: i_Pessoa, success: true };
 
   } catch (erro) {
-    console.error('[FALHA]', erro);
+    error('[FALHA]', erro);
 
-    // 📝 Registrar erro no banco
+    // Logar também no banco, se necessário
     await supabase.from('log_erro').insert({
       origem: erro.origem ?? 'desconhecido',
       mensagem: erro.mensagem ?? 'Erro desconhecido',
@@ -104,5 +140,5 @@ export async function criarPessoaCompleta({ pessoa, pesFisica, pesJuridica, ende
     });
 
     return { error: erro };
-   }
+  }
 }

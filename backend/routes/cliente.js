@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
   res.status(201).json(resultado.data);
 });
 
-// PUT /Clientes/:id
+// PUT /Clientes/:idc
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { pessoa } = req.body;
