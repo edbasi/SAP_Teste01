@@ -31,6 +31,18 @@ app.use('/bancos', bancoRoutes);
 app.use('/limpezas', limpezaRoutes);
 app.use('/pessoas', pessoaRoutes);
 
+import { execSync } from 'child_process';
+
+// ✅ rota /versao que mostra o commit atual
+app.get('/versao', (req, res) => {
+  try {
+    const hash = execSync('git rev-parse --short HEAD').toString().trim();
+    res.send(`Versão atual do backend: ${hash}`);
+  } catch (e) {
+    res.status(500).send('Erro ao obter versão');
+  }
+});
+
 // ✅ Endpoint direto para a view vw_pessoa (além de /pessoas)
 app.get('/VwPessoa', async (req, res) => {
   try {
