@@ -12,6 +12,8 @@ router.get('/', autenticar, async (req, res) => {
   res.json(data);
 });
 
+
+
 // GET /pessoas/:id — obter uma pessoa
 router.get('/:id', autenticar, async (req, res) => {
   const { id } = req.params;
