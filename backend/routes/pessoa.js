@@ -26,8 +26,8 @@ router.get('/:id', autenticar, async (req, res) => {
 });
 
 // POST /pessoas — criar nova pessoa
-router.post('/', async (req, res) => {
-// router.post('/', autenticar, async (req, res) => {
+// router.post('/', async (req, res) => {
+router.post('/', autenticar, async (req, res) => {
   try {
     const dados = req.body;
     const idCriado = await criarPessoaCompleta(dados);
