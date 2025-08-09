@@ -32,7 +32,6 @@ app.use('/bancos', bancoRoutes);
 app.use('/limpezas', limpezaRoutes);
 app.use('/pessoas', pessoaRoutes);
 
-
 // ✅ rota /versao que mostra o commit atual
 app.get('/versao', (req, res) => {
   try {
@@ -48,8 +47,7 @@ app.get('/vwpessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwpessoa')
-      .select('*');
-
+      .select('scodape,snomape,sclsape,sdocape,sTipApe');
     if (error) throw error;
     res.json(data);
   } catch (err) {
