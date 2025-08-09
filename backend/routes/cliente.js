@@ -1,7 +1,6 @@
-// routes/cliente.js
+﻿// routes/cliente.js
 import express from 'express';
 import { supabase } from '../supabase.js';
-import { criarPessoaCompleta } from '../services/pessoaService.js';
 
 
 const router = express.Router();
@@ -9,7 +8,7 @@ const router = express.Router();
 // GET /Clientes
 router.get('/', async (req, res) => {
   const { data, error } = await supabase
-    .from('VwPessoa')
+    .from('vwpessoa')
     .select('*')
     .eq('tipo_descricao', 'Cliente');
 
@@ -21,7 +20,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
-    .from('VwPessoa')
+    .from('vwpessoa')
     .select('*')
     .eq('id', id)
     .eq('tipo_descricao', 'Cliente')
