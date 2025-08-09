@@ -47,7 +47,7 @@ app.get('/vwpessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwpessoa')
-      .select('scodape,snomape,sclsape,sdocape,sTipApe');
+      .select('scodape,snomape,sclsape,sdocape,stipApe');
     if (error) throw error;
     res.json(data);
   } catch (err) {
