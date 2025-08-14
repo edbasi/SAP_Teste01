@@ -1,7 +1,7 @@
 import express from 'express';
 import { supabase } from '../supabase.js';
 import { autenticar } from '../middleware/auth.js';
-
+c
 const router = express.Router();
 
 // GET /pessoas — listar todas
@@ -19,7 +19,7 @@ router.get('/:id', autenticar, async (req, res) => {
   const { data, error } = await supabase
     .from('vwpessoa')
     .select('*')
-    .eq('id', id)
+    .eq('pi_id_pessoa', id)
     .single();
 
   if (error) return res.status(404).json({ erro: 'Pessoa não encontrada' });
@@ -64,7 +64,7 @@ router.delete('/:id', autenticar, async (req, res) => {
   const { error } = await supabase
     .from('pessoa')
     .delete()
-    .eq('id', id);
+    .eq('pi_id_pessoa', id);
 
   if (error) return res.status(500).json({ erro: error.message });
 
