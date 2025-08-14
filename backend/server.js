@@ -47,7 +47,7 @@ app.get('/vwpessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwpessoa')
-      .select('ps_cod_pessoa,ps_nom_pessoa,ps_des_classe,ps_doc_pessoa,ps_tip_classe');
+      .select('ps_cod_pessoa,ps_nom_pessoa,ps_doc_pessoa,ps_des_classe,ps_nom_banco,ps_tip_classe,pi_ind_classe');
     if (error) throw error;
     res.json(data);
   } catch (err) {
