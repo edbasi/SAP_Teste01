@@ -47,11 +47,11 @@ app.get('/vwpessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwpessoa')
-      .select('scodape,snomape,sclsape,sdocape,stipape');
+      .select('ps_cod_pessoa,ps_nom_pessoa,ps_des_classe,ps_doc_pessoa,ps_tip_classe');
     if (error) throw error;
     res.json(data);
   } catch (err) {
-    res.status(500).json({ mensagem: 'aaaaaa', erro: err.message });
+    res.status(500).json({ mensagem: 'vwpessoa', erro: err.message });
   }
 });
 
