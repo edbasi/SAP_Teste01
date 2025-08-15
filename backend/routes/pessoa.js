@@ -1,7 +1,7 @@
 import express from 'express';
 import { supabase } from '../supabase.js';
 import { autenticar } from '../middleware/auth.js';
-c
+
 const router = express.Router();
 
 // GET /pessoas — listar todas
