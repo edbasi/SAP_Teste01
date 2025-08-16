@@ -55,6 +55,19 @@ app.get('/vwpessoa', async (req, res) => {
   }
 });
 
+// ✅ Endpoint direto para a view vwproduto (além de /protutos)
+app.get('/vwproduto', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('vwproduto')
+      .select('*');
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ mensagem: 'vwproduto', erro: err.message });
+  }
+});
+
 // ✅ Rota raiz para teste rápido
 app.get('/', (_, res) => res.send('✅ API rodando com Supabase + JWT + Render!'));
 
