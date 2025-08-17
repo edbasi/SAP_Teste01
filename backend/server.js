@@ -11,6 +11,7 @@ import operadorRoutes from './routes/operador.js';
 import bancoRoutes from './routes/banco.js';
 import limpezaRoutes from './routes/limpeza.js';
 import pessoaRoutes from './routes/pessoa.js';
+import produtoRoutes from './routes/produto.js';
 import authRoutes from './routes/auth.js'; // ✅ Rota de login
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use('/operadores', operadorRoutes);
 app.use('/bancos', bancoRoutes);
 app.use('/limpezas', limpezaRoutes);
 app.use('/pessoas', pessoaRoutes);
+app.use('/produtos', produtoRoutes);
 
 // ✅ rota /versao que mostra o commit atual
 app.get('/versao', (req, res) => {
