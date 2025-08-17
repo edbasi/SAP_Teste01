@@ -5,11 +5,6 @@ import { supabase } from './supabase.js';
 
 // ✅ Rotas REST
 import { execSync } from 'child_process';
-import clienteRoutes from './routes/cliente.js';
-import fornecedorRoutes from './routes/fornecedor.js';
-import operadorRoutes from './routes/operador.js';
-import bancoRoutes from './routes/banco.js';
-import limpezaRoutes from './routes/limpeza.js';
 import pessoaRoutes from './routes/pessoa.js';
 import produtoRoutes from './routes/produto.js';
 import authRoutes from './routes/auth.js'; // ✅ Rota de login
@@ -26,11 +21,6 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 
 // ✅ Rotas REST de negócio
-app.use('/clientes', clienteRoutes);
-app.use('/fornecedores', fornecedorRoutes);
-app.use('/operadores', operadorRoutes);
-app.use('/bancos', bancoRoutes);
-app.use('/limpezas', limpezaRoutes);
 app.use('/pessoas', pessoaRoutes);
 app.use('/produtos', produtoRoutes);
 
@@ -56,6 +46,19 @@ app.get('/vwpessoa', async (req, res) => {
     res.status(500).json({ mensagem: 'vwpessoa', erro: err.message });
   }
 });
+
+    // // GET by ID
+    // router.get('/:id', async (req, res) => {
+    //   const { id } = req.params;
+    //   const { data, error } = await supabase
+    //     .from('pessoa_view_completa')
+    //     .select('*')
+    //     .eq('id', id)
+    //     .eq('descricao', tipoDescricao)
+    //     .single();
+    //   if (error) return res.status(404).json({ erro: error.message });
+    //   res.json(data);
+    // });
 
 // ✅ Endpoint direto para a view vwproduto (além de /protutos)
 app.get('/vwproduto', async (req, res) => {
