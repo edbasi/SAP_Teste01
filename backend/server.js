@@ -5,6 +5,7 @@ import { supabase } from './supabase.js';
 
 // ✅ Rotas REST
 import { execSync } from 'child_process';
+import movtoRoutes from './routes/movto.js';
 import pessoaRoutes from './routes/pessoa.js';
 import produtoRoutes from './routes/produto.js';
 import authRoutes from './routes/auth.js'; // ✅ Rota de login
@@ -22,6 +23,7 @@ app.use('/auth', authRoutes);
 
 // ✅ Rotas REST de negócio
 app.use('/pessoas', pessoaRoutes);
+app.use('/movtos', movtoRoutes);
 app.use('/produtos', produtoRoutes);
 
 // ✅ rota /versao que mostra o commit atual
@@ -47,19 +49,6 @@ app.get('/vwpessoa', async (req, res) => {
   }
 });
 
-    // // GET by ID
-    // router.get('/:id', async (req, res) => {
-    //   const { id } = req.params;
-    //   const { data, error } = await supabase
-    //     .from('pessoa_view_completa')
-    //     .select('*')
-    //     .eq('id', id)
-    //     .eq('descricao', tipoDescricao)
-    //     .single();
-    //   if (error) return res.status(404).json({ erro: error.message });
-    //   res.json(data);
-    // });
-
 // ✅ Endpoint direto para a view vwproduto (além de /protutos)
 app.get('/vwproduto', async (req, res) => {
   try {
@@ -70,6 +59,19 @@ app.get('/vwproduto', async (req, res) => {
     res.json(data);
   } catch (err) {
     res.status(500).json({ mensagem: 'vwproduto', erro: err.message });
+  }
+});
+
+// ✅ Endpoint direto para a view vwmovto (além de /movtos)
+app.get('/vwmovto', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('vwmovto')
+      .select('*');
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ mensagem: 'vwmovto', erro: err.message });
   }
 });
 
