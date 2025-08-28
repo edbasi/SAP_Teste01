@@ -31,7 +31,7 @@ router.post('/', autenticar, async (req, res) => {
   const payload = req.body;
 
   const { data, error } = await supabase
-    .rpc('inserir_Movto_completo', payload);
+    .rpc('inserir_movto_completo', payload);
 
   if (error) {
     console.error('Erro ao inserir movimentação completa:', error.message);
@@ -46,7 +46,7 @@ router.put('/:id', autenticar, async (req, res) => {
   const payload = req.body;
 
   const { data, error } = await supabase
-    .rpc('inserir_movto_completa', payload);
+    .rpc('inserir_movto_completo', payload);
 
   if (error) {
     console.error('Erro ao atualizar movto completa:', error.message);
