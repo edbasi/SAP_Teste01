@@ -67,8 +67,8 @@ app.get('/vwmovto', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwmovto')
-      .select('*');
-    if (error) throw error;
+      .select('pi_id_movto, ps_doc_movto, pd_dat_movto, ps_tip_movto, ps_pes_saida, ps_pes_entrada, ps_nom_banco');
+      if (error) throw error;
     res.json(data);
   } catch (err) {
     res.status(500).json({ mensagem: 'vwmovto', erro: err.message });
